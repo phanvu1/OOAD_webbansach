@@ -1,0 +1,119 @@
+.main-container {
+    margin-left: 305px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-control {
+    width: auto;
+    border-radius: 4px;
+}
+
+.chart-container {
+    width: 80%;
+    margin: auto;
+}
+
+h2 {
+    color: #2980b9;
+    font-weight: bold;
+}
+
+.text-primary {
+    text-align: center;
+}
+
+#start-date, #end-date {
+    width: 200px;
+}
+
+#top-kh {
+    width: 70px;
+}
+
+#sort-order {
+    width: 155px;
+}
+
+.btn{
+    width: 120px;
+}
+
+.link-donhang {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.link-donhang:hover {
+    text-decoration: underline;
+}
+
+.don-hang {
+    display: inline;
+}
+
+.table-scroll {
+    max-height: 170px;
+    overflow-y: auto;
+}
+
+.fixed-header thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .form-control,
+    #start-date,
+    #end-date,
+    #top-kh,
+    #sort-order,
+    .btn {
+        width: 100%;
+    }
+
+    .chart-container {
+        width: 100%;
+    }
+
+    h2 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .table-scroll {
+        max-height: 300px;
+        overflow-x: auto;
+    }
+
+    .fixed-header thead th {
+        font-size: 13px;
+    }
+
+    .link-donhang {
+        font-size: 14px;
+    }
+}
+
+
+
