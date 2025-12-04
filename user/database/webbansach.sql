@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th4 29, 2025 lúc 09:24 AM
+-- Thời gian đã tạo: Th12 04, 2025 lúc 03:26 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
--- Phiên bản PHP: 8.2.12
+-- Phiên bản PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Cơ sở dữ liệu: `webbansach`
 --
-CREATE DATABASE IF NOT EXISTS `webbansach` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `webbansach`;
 
 -- --------------------------------------------------------
 
@@ -91,7 +89,8 @@ INSERT INTO `chitietdanhmuc` (`idchitietdanhmuc`, `iddanhmuc`, `tenchitietdanhmu
 (27, 9, 'Truyện cổ tích thiếu nhi'),
 (28, 10, 'Kỹ năng giao tiếp'),
 (29, 10, 'Kỹ năng quản lý thời gian'),
-(30, 10, 'Kỹ năng phát triển bản thân');
+(30, 10, 'Kỹ năng phát triển bản thân'),
+(31, 1, 'ww');
 
 -- --------------------------------------------------------
 
@@ -104,31 +103,22 @@ CREATE TABLE `chitiethoadon` (
   `idhoadon` int(11) NOT NULL,
   `idsach` int(11) NOT NULL,
   `soluong` int(11) NOT NULL,
-  `dongia` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `gia` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `chitiethoadon`
 --
 
-INSERT INTO `chitiethoadon` (`idchitiethoadon`, `idhoadon`, `idsach`, `soluong`, `dongia`) VALUES
-(1, 4, 8, 1, 65000),
-(2, 4, 10, 1, 45000),
-(3, 4, 9, 1, 110000),
-(4, 5, 8, 1, 65000),
-(5, 5, 10, 1, 45000),
-(6, 5, 24, 1, 110000),
-(7, 6, 14, 1, 110000),
-(8, 6, 18, 1, 140000),
-(9, 6, 9, 2, 110000),
-(10, 7, 8, 1, 65000),
-(11, 7, 24, 1, 110000),
-(12, 7, 9, 1, 110000),
-(13, 8, 8, 1, 65000),
-(14, 8, 24, 1, 110000),
-(15, 8, 10, 1, 45000),
-(16, 9, 8, 2, 65000),
-(17, 9, 9, 2, 110000);
+INSERT INTO `chitiethoadon` (`idchitiethoadon`, `idhoadon`, `idsach`, `soluong`, `gia`) VALUES
+(6, 19, 8, 1, 65000.00),
+(7, 19, 10, 1, 45000.00),
+(8, 19, 24, 1, 110000.00),
+(9, 19, 9, 1, 110000.00),
+(10, 20, 10, 1, 45000.00),
+(11, 21, 24, 1, 110000.00),
+(12, 22, 9, 1, 110000.00),
+(13, 23, 8, 1, 65000.00);
 
 -- --------------------------------------------------------
 
@@ -137,12 +127,20 @@ INSERT INTO `chitiethoadon` (`idchitiethoadon`, `idhoadon`, `idsach`, `soluong`,
 --
 
 CREATE TABLE `chitietphieunhap` (
+  `idchitietphieunhap` int(11) NOT NULL,
   `idphieunhap` int(11) NOT NULL,
   `idsach` int(11) NOT NULL,
   `soluong` int(11) NOT NULL,
-  `dongia` int(11) NOT NULL,
-  `loinhuan` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `gia` decimal(10,2) NOT NULL,
+  `loinhuan` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `chitietphieunhap`
+--
+
+INSERT INTO `chitietphieunhap` (`idchitietphieunhap`, `idphieunhap`, `idsach`, `soluong`, `gia`, `loinhuan`) VALUES
+(1, 7, 1, 4, 12599975.00, 4);
 
 -- --------------------------------------------------------
 
@@ -168,7 +166,7 @@ INSERT INTO `danhmuc` (`iddanhmuc`, `tendanhmuc`, `trangthai`) VALUES
 (5, 'Sách Lịch sử', 1),
 (6, 'Sách Ngoại văn', 1),
 (7, 'Sách Kinh tế', 1),
-(8, 'Sách Giáo dục', 1),
+(8, 'S(sinách Giáo dục', 1),
 (9, 'Sách Tâm lý', 1),
 (10, 'Sách Truyện tranh', 1);
 
@@ -479,11 +477,11 @@ CREATE TABLE `hoadon` (
   `idhoadon` int(11) NOT NULL,
   `idkhachhang` int(11) NOT NULL,
   `iddiachi` int(11) NOT NULL,
-  `idnhanvien` int(11) DEFAULT NULL,
+  `idnhanvien` int(11) NOT NULL,
   `phuongthuctt` varchar(255) NOT NULL,
   `ngayxuat` date NOT NULL,
   `tongtien` decimal(10,2) NOT NULL,
-  `trangthai` int(11) NOT NULL DEFAULT 0
+  `trangthai` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -491,15 +489,11 @@ CREATE TABLE `hoadon` (
 --
 
 INSERT INTO `hoadon` (`idhoadon`, `idkhachhang`, `iddiachi`, `idnhanvien`, `phuongthuctt`, `ngayxuat`, `tongtien`, `trangthai`) VALUES
-(1, 8, 1, 1, 'chuyển khoản', '2025-04-09', 788888.00, 1),
-(2, 5, 1, 1, 'chuyển khoản', '2025-04-09', 100000.00, 1),
-(3, 3, 1, 1, 'ck', '2025-04-09', 99999999.99, 0),
-(4, 1, 2, 5, 'Thanh toán khi nhận hàng', '2025-04-28', 220000.00, 0),
-(5, 1, 2, 6, 'Thanh toán khi nhận hàng', '2025-04-28', 220000.00, 0),
-(6, 1, 2, 7, 'Thanh toán khi nhận hàng', '2025-04-28', 470000.00, 0),
-(7, 1, 2, 9, 'Thanh toán khi nhận hàng', '2025-04-28', 285000.00, 0),
-(8, 1, 2, 10, 'Thanh toán khi nhận hàng', '2025-04-28', 220000.00, 0),
-(9, 1, 2, 11, 'Thanh toán khi nhận hàng', '2025-04-28', 350000.00, 0);
+(19, 2, 3, 1, 'Thanh toán khi nhận hàng', '2025-11-17', 330000.00, 2),
+(20, 2, 3, 1, 'Thanh toán khi nhận hàng', '2025-12-01', 45000.00, 2),
+(21, 2, 3, 1, 'Thanh toán khi nhận hàng', '2025-12-01', 110000.00, 3),
+(22, 2, 3, 1, 'Thanh toán khi nhận hàng', '2025-12-01', 110000.00, 0),
+(23, 2, 3, 1, 'Thanh toán khi nhận hàng', '2025-12-01', 65000.00, 3);
 
 -- --------------------------------------------------------
 
@@ -520,16 +514,18 @@ CREATE TABLE `khachhang` (
 --
 
 INSERT INTO `khachhang` (`idkhachhang`, `ten`, `email`, `sodienthoai`, `trangthai`) VALUES
-(1, 'Nguyễn Văn A', 'nguyenvana@gmail.com', '0912345678', 1),
+(1, 'Nguyễn Văn B', 'nguyenvana@gmail.com', '0912345678', 0),
 (2, 'Trần Thị B', 'tranthib@gmail.com', '0987654321', 1),
 (3, 'Lê Văn C', 'levanc@yahoo.com', '0909123456', 1),
 (4, 'Phạm Thị D', 'phamthid@gmail.com', '0978123456', 1),
 (5, 'Hoàng Văn E', 'hoangve@outlook.com', '0967890123', 1),
-(6, 'Vũ Thị F', 'vuthif@gmail.com', '0912456789', 1),
-(7, 'Đặng Văn G', 'dangvang@yahoo.com', '0988123456', 1),
+(6, 'Vũ Thị F', 'vuthif@gmail.com', '0912456789', 0),
+(7, 'Đặng Văn G', 'dangvang@yahoo.com', '0988123456', 0),
 (8, 'Bùi Thị H', 'buithih@gmail.com', '0909876543', 1),
 (9, 'Mai Văn I', 'maivani@gmail.com', '0977123456', 1),
-(10, 'Lý Thị K', 'lythik@outlook.com', '0966789012', 1);
+(10, 'Lý Thị K', 'lythik@outlook.com', '0966789012', 1),
+(11, 'ss', 'ss@gmail.com', '0123456789', 1),
+(12, 'Phạm Thị D', 'phamthid@example.com', '0898788788', 1);
 
 -- --------------------------------------------------------
 
@@ -583,26 +579,10 @@ CREATE TABLE `nhanvien` (
 
 INSERT INTO `nhanvien` (`idnhanvien`, `ten`, `email`, `chucvu`, `sodienthoai`, `trangthai`) VALUES
 (1, 'Nguyễn Văn A', 'nguyenvana@example.com', 'Nhân viên bán hàng', '0999888777', 1),
-(2, 'Trần Thị B', 'tranthib@example.com', 'Nhân viên nhập hàng', '0123456789', 1),
-(3, 'Lê Văn C', 'levanc@example.com', 'Quản lý', '0898787765', 1),
+(2, 'Trần Thị B', 'tranthib@example.com', 'Nhân viên nhập hàng', '0123456789', 0),
+(3, 'Lê Văn C', 'levancc@example.com', 'Quản lý', '0898787765', 0),
 (4, 'Phạm Thị D', 'phamthid@example.com', 'Quản trị viên', '0898788788', 1),
-(5, 'Thu Huyền', 'thuhuyen@gmail.com', 'Nhân viên bán hàng', '0123456781', 1),
-(6, 'abc', 'abc@gmail.com', 'Nhân viên bán hàng', '0999777888', 1),
-(7, 'Nguyen Van A', 'nguyenvana@example.com', 'Nhân viên bán hàng', '0901234001', 1),
-(8, 'Tran Thi B', 'tranthib@example.com', 'Nhân viên bán hàng', '0901234002', 1),
-(9, 'Le Van C', 'levanc@example.com', 'Nhân viên bán hàng', '0901234003', 1),
-(10, 'Pham Thi D', 'phamthid@example.com', 'Nhân viên bán hàng', '0901234004', 1),
-(11, 'Hoang Van E', 'hoangvane@example.com', 'Nhân viên bán hàng', '0901234005', 1),
-(12, 'Nguyen Thi F', 'nguyenthif@example.com', 'Nhân viên bán hàng', '0901234006', 1),
-(13, 'Tran Van G', 'tranvang@example.com', 'Nhân viên bán hàng', '0901234007', 1),
-(14, 'Le Thi H', 'lethih@example.com', 'Nhân viên bán hàng', '0901234008', 1),
-(15, 'Pham Van I', 'phamvani@example.com', 'Nhân viên bán hàng', '0901234009', 1),
-(16, 'Hoang Thi K', 'hoangthik@example.com', 'Nhân viên bán hàng', '0901234010', 1),
-(17, 'Nguyen Van L', 'nguyenvanl@example.com', 'Nhân viên bán hàng', '0901234011', 1),
-(18, 'Tran Thi M', 'tranthim@example.com', 'Nhân viên bán hàng', '0901234012', 1),
-(19, 'Le Van N', 'levann@example.com', 'Nhân viên bán hàng', '0901234013', 1),
-(20, 'Pham Thi P', 'phamthip@example.com', 'Nhân viên bán hàng', '0901234014', 1),
-(21, 'Hoang Van Q', 'hoangvanq@example.com', 'Nhân viên bán hàng', '0901234015', 1);
+(5, 'd', 'ss@gmail.com', 'Default', '0387299617', 1);
 
 -- --------------------------------------------------------
 
@@ -624,7 +604,7 @@ CREATE TABLE `nhaxuatban` (
 --
 
 INSERT INTO `nhaxuatban` (`idnhaxuatban`, `tennxb`, `email`, `sodienthoai`, `diachi`, `trangthai`) VALUES
-(1, 'NXB Trẻ', 'nxbtre@gmail.com', '0909123456', '161 Lý Chính Thắng, Q3, TP.HCM', 1),
+(1, 'NXB Trẻ', 'nxbtre@gmail.com', '0909123456', '161 Lý Chính Thắng, Q3, TP.HCM', 0),
 (2, 'NXB Kim Đồng', 'kimdong@nxb.com', '0918234567', '55 Quang Trung, Hà Nội', 1),
 (3, 'NXB Văn Học', 'vanhoc@nxb.com', '0987654321', '18 Nguyễn Du, Hà Nội', 1),
 (4, 'NXB Tổng Hợp', 'tonghop@nxb.com', '0932145678', '62 Nguyễn Thị Minh Khai,\r\n\r\n TP.HCM', 1),
@@ -643,7 +623,6 @@ INSERT INTO `nhaxuatban` (`idnhaxuatban`, `tennxb`, `email`, `sodienthoai`, `dia
 
 CREATE TABLE `phanquyen` (
   `Quyen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Default' COMMENT 'Tên quyền',
-  `QLCuaHang` int(1) NOT NULL DEFAULT 0,
   `QLSanPham` int(1) NOT NULL DEFAULT 0,
   `QLDanhMuc` int(1) NOT NULL DEFAULT 0,
   `QLNhanVien` int(1) NOT NULL DEFAULT 0,
@@ -653,18 +632,19 @@ CREATE TABLE `phanquyen` (
   `QLPhieuNhap` int(1) NOT NULL DEFAULT 0,
   `QLThongke` int(1) NOT NULL DEFAULT 0,
   `QLTaiKhoan` int(1) NOT NULL DEFAULT 0,
-  `QLPhanQuyen` int(1) NOT NULL DEFAULT 0
+  `QLPhanQuyen` int(1) NOT NULL DEFAULT 0,
+  `QLCuaHang` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `phanquyen`
 --
 
-INSERT INTO `phanquyen` (`Quyen`, `QLCuaHang`, `QLSanPham`, `QLDanhMuc`, `QLNhanVien`, `QLKhachHang`, `QLNhaCungCap`, `QLDonHang`, `QLPhieuNhap`, `QLThongke`, `QLTaiKhoan`, `QLPhanQuyen`) VALUES
-('Default', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-('Nhân viên bán hàng', 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0),
-('Nhân viên nhập hàng', 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0),
-('Quản lý', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1),
+INSERT INTO `phanquyen` (`Quyen`, `QLSanPham`, `QLDanhMuc`, `QLNhanVien`, `QLKhachHang`, `QLNhaCungCap`, `QLDonHang`, `QLPhieuNhap`, `QLThongke`, `QLTaiKhoan`, `QLPhanQuyen`, `QLCuaHang`) VALUES
+('Default', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+('Nhân viên bán hàng', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+('Nhân viên nhập hàng', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+('Quản lý', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 ('Quản trị viên', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
@@ -682,6 +662,19 @@ CREATE TABLE `phieunhap` (
   `trangthai` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `phieunhap`
+--
+
+INSERT INTO `phieunhap` (`idphieunhap`, `idnhacungcap`, `idnhanvien`, `ngaynhap`, `tongtien`, `trangthai`) VALUES
+(1, 1, 1, '2025-12-01', 99999999.99, 0),
+(2, 1, 1, '2025-12-01', 99999999.99, 0),
+(3, 1, 1, '2025-12-01', 99999999.99, 0),
+(4, 1, 1, '2025-12-01', 185175.00, 1),
+(5, 3, 1, '2025-12-01', 2052780.00, 1),
+(6, 1, 1, '2025-12-01', 225000.00, 1),
+(7, 2, 1, '2025-12-01', 503999.00, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -693,6 +686,7 @@ CREATE TABLE `sach` (
   `tensach` varchar(255) NOT NULL,
   `idtacgia` int(11) NOT NULL,
   `idnhaxuatban` int(11) NOT NULL,
+  `idtheloai` int(11) DEFAULT NULL,
   `idctdanhmuc` int(11) NOT NULL,
   `gia` decimal(10,2) NOT NULL,
   `sltonkho` int(11) NOT NULL,
@@ -705,58 +699,59 @@ CREATE TABLE `sach` (
 -- Đang đổ dữ liệu cho bảng `sach`
 --
 
-INSERT INTO `sach` (`idsach`, `tensach`, `idtacgia`, `idnhaxuatban`, `idctdanhmuc`, `gia`, `sltonkho`, `mota`, `anhbia`, `trangthai`) VALUES
-(1, 'Cho tôi xin một vé đi tuổi thơ', 1, 1, 1, 75000.00, 100, 'Tác phẩm kinh điển của Nguyễn Nhật Ánh, tái hiện tuổi thơ sống động. \nNhững trò chơi, ký ức và tình bạn trong trẻo được khắc họa tinh tế. \nCâu chuyện mang đậm hơi thở miền quê Nam Bộ, đầy hoài niệm. \nSách đã chinh phục hàng triệu độc giả qua nhiều thế hệ. \nMột hành trình trở về tuổi thơ mà bất kỳ ai cũng nên đọc.', 'img/cho_toi_xin_mot_ve/bia.jpg', 0),
-(2, 'Rừng Na Uy', 2, 2, 1, 120000.00, 50, 'Tiểu thuyết nổi tiếng của Haruki Murakami, kể về tình yêu và cô đơn. \nNhân vật chính Toru Watanabe đối mặt với mất mát và ký ức tuổi trẻ. \nBối cảnh Nhật Bản thập niên 60 được tái hiện đầy cảm xúc. \nLối viết mơ màng, sâu lắng, đậm chất Murakami. \nTác phẩm đã được dịch ra nhiều thứ tiếng và yêu thích toàn cầu.', 'img/rung_na_uy/bia.jpg', 0),
-(3, 'Án mạng trên chuyến tàu tốc hành', 3, 3, 3, 95000.00, 75, 'Tác phẩm trinh thám kinh điển của Agatha Christie, không thể bỏ qua. \nThám tử Hercule Poirot giải mã vụ án trên chuyến tàu sang trọng. \nMỗi hành khách đều là nghi phạm, tạo nên những tình tiết gay cấn. \nCốt truyện được xây dựng chặt chẽ với cái kết bất ngờ. \nSách đã được chuyển thể thành phim và kịch nổi tiếng.', 'img/an_mang_tren_tau/bia.jpg', 1),
-(4, 'Chí Phèo', 4, 4, 1, 55000.00, 120, 'Kiệt tác văn học hiện thực của Nam Cao, khắc họa số phận bi thảm. \nChí Phèo, một người nông dân bị tha hóa bởi xã hội phong kiến. \nTình yêu với Thị Nở là tia sáng hiếm hoi nhưng cũng đầy bi kịch. \nTác phẩm phê phán sâu sắc sự bất công và tàn nhẫn của xã hội cũ. \nĐây là một trong những tác phẩm quan trọng của văn học Việt Nam.', 'img/chi_pheo/bia.jpg', 1),
-(5, 'The Shining', 5, 5, 5, 135000.00, 60, 'Tiểu thuyết kinh dị nổi tiếng của Stephen King, đầy ám ảnh. \nGia đình Torrance bị mắc kẹt trong khách sạn Overlook ma quái. \nNhững hiện tượng siêu nhiên và tâm lý bất ổn đẩy họ vào nguy hiểm. \nLối kể chuyện lôi cuốn, tạo cảm giác rùng rợn đến từng trang. \nSách đã được chuyển thể thành phim kinh điển của Stanley Kubrick.', 'img/the_shinning/bia.jpg', 1),
-(6, 'Số đỏ', 6, 6, 1, 85000.00, 90, 'Tác phẩm châm biếm đỉnh cao của Vũ Trọng Phụng, đầy hài hước. \nNhân vật Xuân Tóc Đỏ từ kẻ vô danh trở thành \"người hùng\" xã hội. \nTác phẩm phơi bày sự giả dối và lố lăng của tầng lớp thượng lưu. \nLối viết sắc sảo, giọng văn trào phúng khiến người đọc không thể rời mắt. \nĐây là một trong những tác phẩm tiêu biểu của văn học Việt Nam.', 'img/so_do/bia.jpg', 1),
-(7, 'Cosmos', 7, 7, 7, 150000.00, 40, 'Cuốn sách khoa học kinh điển của Carl Sagan, mở ra cánh cửa vũ trụ. \nTác phẩm giải thích các khái niệm phức tạp một cách dễ hiểu. \nTừ lịch sử thiên văn đến tương lai của loài người, sách đều đề cập. \nLối viết truyền cảm hứng, khiến người đọc say mê khám phá khoa học. \nSách đi kèm với series truyền hình nổi tiếng cùng tên.', 'img/comos/bia.jpg', 1),
-(8, 'Dế mèn phiêu lưu ký', 8, 8, 9, 65000.00, 194, 'Tác phẩm thiếu nhi nổi tiếng của Tô Hoài, gắn bó với nhiều thế hệ. \nChú dế mèn trải qua hành trình phiêu lưu đầy thú vị và ý nghĩa. \nNhững bài học về tình bạn, lòng dũng cảm được lồng ghép khéo léo. \nLối kể chuyện sinh động, đậm chất dân gian, thu hút trẻ em. \nSách là một phần ký ức tuổi thơ của hàng triệu độc giả Việt Nam.', 'img/de_men_phieu_luu_ky/bia.jpg', 1),
-(9, 'Đắc nhân tâm', 9, 9, 10, 110000.00, 144, 'Cuốn sách kỹ năng sống kinh điển của Dale Carnegie, thay đổi cuộc đời. \nTác phẩm hướng dẫn cách xây dựng mối quan hệ và thu phục lòng người. \nNhững lời khuyên thực tế giúp người đọc cải thiện kỹ năng giao tiếp. \nSách đã được dịch ra hàng chục ngôn ngữ, bán hàng triệu bản. \nĐây là cuốn sách gối đầu giường cho bất kỳ ai muốn thành công.', 'img/dac_nhan_tam/bia.jpg', 1),
-(10, 'Góc sân và khoảng trời', 10, 10, 9, 45000.00, 177, 'Tập thơ nổi tiếng của Trần Đăng Khoa, viết khi ông mới 8 tuổi. \nNhững vần thơ trong sáng, mộc mạc, tái hiện tuổi thơ làng quê. \nTác phẩm phản ánh thế giới hồn nhiên qua đôi mắt trẻ thơ. \nSự tài năng của \"thần đồng thơ ca\" khiến độc giả kinh ngạc. \nĐây là một trong những tập thơ thiếu nhi xuất sắc của Việt Nam.', 'img/goc_san_va_khoang_troi/bia.jpg', 1),
-(11, 'Lược sử thời gian', 11, 1, 7, 160000.00, 30, 'Cuốn sách khoa học nổi tiếng của Stephen Hawking, giải thích về vũ trụ. \nTác phẩm đưa người đọc khám phá thời gian, không gian và lỗ đen. \nLối viết dễ hiểu, dù đề cập đến những khái niệm vật lý phức tạp. \nSách đã truyền cảm hứng cho hàng triệu người yêu khoa học. \nĐây là một trong những tác phẩm bán chạy nhất mọi thời đại.', 'img/luoc_su_thoi_gian/bia.jpg', 1),
-(12, 'Nhà giả kim', 2, 2, 1, 90000.00, 80, 'Tiểu thuyết nổi tiếng của Paulo Coelho, kể về hành trình tìm ước mơ. \nNhân vật Santiago đi tìm \"kho báu\" và khám phá ý nghĩa cuộc sống. \nTác phẩm truyền tải thông điệp sâu sắc về việc lắng nghe trái tim. \nLối viết giàu hình ảnh, mang tính triết lý và cảm hứng. \nSách đã bán hàng triệu bản và được yêu thích trên toàn thế giới.', 'img/nha_gia_kim/bia.jpg', 1),
-(13, 'Đi tìm lẽ sống', 9, 9, 6, 80000.00, 70, 'Cuốn sách truyền cảm hứng của Viktor Frankl, nói về ý nghĩa cuộc đời. \nTác giả kể lại trải nghiệm sống sót trong trại tập trung Đức Quốc xã. \nSách nhấn mạnh tầm quan trọng của việc tìm kiếm mục đích sống. \nLối viết chân thực, sâu sắc, chạm đến trái tim người đọc. \nĐây là một tác phẩm giúp người đọc vượt qua khó khăn trong cuộc sống.', 'img/di_tim_le_song/bia.jpg', 1),
-(14, 'Bố già', 3, 3, 1, 110000.00, 89, 'Tiểu thuyết kinh điển của Mario Puzo, kể về thế giới mafia Ý. \nNhân vật Don Vito Corleone là biểu tượng của quyền lực và lòng trung thành. \nTác phẩm khắc họa sâu sắc tình thân và sự tàn nhẫn của thế giới ngầm. \nLối kể chuyện hấp dẫn, đầy kịch tính và bất ngờ. \nSách đã được chuyển thể thành bộ phim nổi tiếng đoạt giải Oscar.', 'img/bo_gia/bia.jpg', 1),
-(15, 'Cô gái đến từ hôm qua', 1, 1, 1, 70000.00, 100, 'Tác phẩm nổi tiếng của Nguyễn Nhật Ánh, đong đầy cảm xúc tuổi trẻ. \nCâu chuyện kể về mối tình đầu trong sáng giữa hai thế hệ. \nBối cảnh Sài Gòn xưa được tái hiện sống động qua từng trang sách. \nLối viết nhẹ nhàng, sâu lắng, khiến người đọc không thể rời mắt. \nSách đã được chuyển thể thành phim, được khán giả yêu thích.', 'img/co_gai_den_tu_hom_qua/bia.jpg', 1),
-(16, 'Mắt biếc', 1, 1, 1, 85000.00, 110, 'Tác phẩm đầy cảm xúc của Nguyễn Nhật Ánh, kể về tình yêu đơn phương. \nNhân vật Ngạn yêu Hà Lan qua đôi mắt biếc đầy mê hoặc. \nCâu chuyện mang đến những rung động đầu đời và nỗi buồn sâu lắng. \nLối viết trong trẻo, giàu hình ảnh, chạm đến trái tim người đọc. \nSách đã được chuyển thể thành phim, gây sốt tại Việt Nam.', 'img/mat_biec/bia.jpg', 1),
-(17, 'Kafka bên bờ biển', 2, 2, 1, 130000.00, 60, 'Tiểu thuyết kỳ ảo của Haruki Murakami, đầy bí ẩn và sâu sắc. \nHai câu chuyện song song về một thiếu niên bỏ nhà đi và một ông lão lạ. \nTác phẩm đan xen giữa hiện thực và huyền bí, khiến người đọc tò mò. \nLối viết đặc trưng của Murakami, mơ màng và đầy triết lý. \nSách là một trong những kiệt tác của văn học Nhật Bản hiện đại.', 'img/kafka_ben_bo_bien/bia.jpg', 1),
-(18, '1Q84', 2, 2, 1, 140000.00, 49, 'Tiểu thuyết đồ sộ của Haruki Murakami, gồm ba phần hấp dẫn. \nCâu chuyện diễn ra trong một thế giới song song đầy bí ẩn. \nNhân vật chính Aomame và Tengo đối mặt với những sự kiện kỳ lạ. \nLối viết phức tạp, đan xen giữa hiện thực và giả tưởng. \nSách là một trong những tác phẩm quan trọng của Murakami.', 'img/1q84/bia.jpg', 1),
-(19, 'Những người khốn khổ', 3, 3, 1, 120000.00, 70, 'Kiệt tác văn học của Victor Hugo, kể về số phận những con người bất hạnh. \nNhân vật Jean Valjean từ một tù nhân trở thành người hùng cứu giúp người khác. \nTác phẩm khắc họa sâu sắc xã hội Pháp thế kỷ 19 đầy bất công. \nLối viết giàu cảm xúc, mang tính sử thi và nhân văn. \nSách đã được chuyển thể thành phim và nhạc kịch nổi tiếng.', 'img/nhung_nguoi_khon_kho/bia.jpg', 1),
-(20, 'Chiến tranh và hòa bình', 3, 3, 1, 150000.00, 40, 'Tiểu thuyết sử thi của Leo Tolstoy, tái hiện nước Nga thời Napoleon. \nTác phẩm khắc họa số phận của nhiều nhân vật qua chiến tranh và hòa bình. \nCâu chuyện đan xen giữa lịch sử, tình yêu và những câu hỏi triết học. \nLối viết đồ sộ, chi tiết, nhưng đầy cảm xúc và cuốn hút. \nĐây là một trong những kiệt tác vĩ đại nhất của văn học thế giới.', 'img/chien_tranh_va_hoa_binh/bia.jpg', 1),
-(21, 'Tiếng chim hót trong bụi mận gai', 3, 3, 1, 95000.00, 80, 'Tiểu thuyết tình cảm nổi tiếng của Colleen McCullough, đầy cảm xúc. \nCâu chuyện kể về tình yêu cấm kỵ giữa Meggie và cha Ralph de Bricassart. \nBối cảnh nước Úc rộng lớn được tái hiện sống động và thơ mộng. \nTác phẩm mang đến những rung động sâu sắc và nỗi buồn day dứt. \nSách đã được chuyển thể thành phim truyền hình nổi tiếng.', 'img/tieng_chim_hot_trong_bui_man_gai/bia.jpg', 1),
-(22, 'Ông già và biển cả', 3, 3, 1, 60000.00, 100, 'Tác phẩm kinh điển của Ernest Hemingway, kể về ý chí con người. \nÔng lão Santiago chiến đấu với con cá lớn trong cuộc chiến sinh tồn. \nTác phẩm đề cao tinh thần kiên cường và lòng dũng cảm. \nLối viết ngắn gọn, mạnh mẽ, đậm chất Hemingway. \nSách đã giúp Hemingway nhận giải Nobel Văn học.', 'img/ong_gia_va_bien_ca/bia.jpg', 1),
-(23, 'Cuốn theo chiều gió', 3, 3, 1, 125000.00, 60, 'Tiểu thuyết tình cảm nổi tiếng của Margaret Mitchell, đầy kịch tính. \nNhân vật Scarlett O’Hara đối mặt với tình yêu và chiến tranh. \nBối cảnh nước Mỹ thời nội chiến được tái hiện chân thực. \nTác phẩm khắc họa mạnh mẽ cá tính và sự kiên cường của phụ nữ. \nSách đã được chuyển thể thành phim kinh điển, đoạt nhiều giải Oscar.', 'img/cuon_theo_chieu_gio/bia.jpg', 1),
-(24, 'Harry Potter và Hòn đá phù thủy', 3, 3, 2, 110000.00, 147, 'Tác phẩm đầu tiên trong series Harry Potter của J.K. Rowling. \nCậu bé Harry Potter khám phá thế giới phép thuật tại trường Hogwarts. \nCuốn sách mở ra hành trình phiêu lưu đầy ma thuật và tình bạn. \nLối viết hấp dẫn, phù hợp với cả trẻ em và người lớn. \nSách đã trở thành hiện tượng văn học toàn cầu.', 'img/harrypotter_va_hon_da_phu_thuy/bia.jpg', 1),
-(25, 'Harry Potter và Phòng chứa bí mật', 3, 3, 2, 110000.00, 140, 'Tác phẩm thứ hai trong series Harry Potter, đầy bí ẩn. \nHarry đối mặt với những bí mật đen tối tại trường Hogwarts. \nCâu chuyện về con rắn Basilisk và Phòng chứa bí mật gây hồi hộp. \nTình bạn giữa Harry, Ron và Hermione tiếp tục được khắc họa sâu sắc. \nSách tiếp tục chinh phục độc giả trên toàn thế giới.', 'img/harrypoter_va_phong_chua_bi_mat/bia.jpg', 1),
-(26, 'Harry Potter và tên tù nhân ngục Azkaban', 3, 3, 2, 110000.00, 130, 'Tác phẩm thứ ba trong series Harry Potter, đầy cảm xúc. \nHarry đối mặt với Sirius Black, một kẻ đào tẩu từ ngục Azkaban. \nNhững bí mật về gia đình Harry dần được hé lộ qua câu chuyện. \nTác phẩm mang đến nhiều tình tiết bất ngờ và cảm động. \nSách đã được chuyển thể thành phim, được khán giả yêu thích.', 'img/harrypotter_va_dia_nguc_buoi/bia.jpg', 1),
-(27, 'Harry Potter và chiếc cốc lửa', 3, 3, 2, 110000.00, 120, 'Tác phẩm thứ tư trong series Harry Potter, đầy kịch tính. \nHarry tham gia giải đấu Tam Pháp Thuật nguy hiểm tại Hogwarts. \nSự trở lại của Chúa tể Voldemort đánh dấu bước ngoặt đen tối. \nCâu chuyện gay cấn với những thử thách phép thuật đầy hấp dẫn. \nSách đã giành được nhiều giải thưởng văn học danh giá.', 'img/harrypotter_va_cbiec_coc_lua/bia.jpg', 1),
-(28, 'Harry Potter và Hội Phượng Hoàng', 3, 3, 2, 110000.00, 110, 'Tác phẩm thứ năm trong series Harry Potter, đầy cảm xúc. \nHarry thành lập Hội Phượng Hoàng để chống lại Voldemort. \nNhững mất mát lớn khiến câu chuyện trở nên sâu sắc hơn. \nTác phẩm khắc họa sự trưởng thành của Harry và bạn bè. \nSách tiếp tục là một phần không thể thiếu của series huyền thoại.', 'img/hrpt_va_hoi_phuong_hoang/bia.jpg', 1),
-(29, 'Harry Potter và Hoàng tử lai', 3, 3, 2, 110000.00, 100, 'Tác phẩm thứ sáu trong series Harry Potter, đầy bất ngờ. \nHarry khám phá bí mật về quá khứ của Voldemort qua ký ức. \nNhân vật \"Hoàng tử lai\" đóng vai trò quan trọng trong cốt truyện. \nTác phẩm mang đến nhiều tình tiết căng thẳng và cảm động. \nSách chuẩn bị cho cái kết hoành tráng của series.', 'img/hrpt_va_hoang_tu_lai/bia.jpg', 1),
-(30, 'Harry Potter và Bảo bối Tử thần', 3, 3, 2, 110000.00, 90, 'Tác phẩm cuối cùng trong series Harry Potter, đầy kịch tính. \nHarry, Ron và Hermione săn lùng Trường Sinh Linh Giá của Voldemort. \nCuộc chiến cuối cùng tại Hogwarts quyết định số phận thế giới phép thuật. \nTác phẩm mang đến cái kết hoàn hảo cho một hành trình dài. \nSách đã trở thành biểu tượng văn học của thế kỷ 21.', 'img/hrpt_va_bao_boi_tu_than/bia.jpg', 1),
-(31, 'Chạng vạng', 3, 3, 4, 90000.00, 80, 'Tác phẩm đầu tiên trong series Chạng vạng của Stephenie Meyer. \nBella Swan yêu Edward Cullen, một chàng trai ma cà rồng bí ẩn. \nTình yêu giữa con người và ma cà rồng đầy nguy hiểm và cám dỗ. \nLối viết lãng mạn, cuốn hút, đặc biệt dành cho tuổi teen. \nSách đã được chuyển thể thành phim, gây sốt trên toàn thế giới.', 'img/chang_vang/bia.jpg', 1),
-(32, 'Trăng non', 3, 3, 4, 90000.00, 70, 'Tác phẩm thứ hai trong series Chạng vạng, đầy cảm xúc. \nBella rơi vào tuyệt vọng khi Edward rời bỏ cô để bảo vệ cô. \nMối quan hệ với Jacob Black, một người sói, làm phức tạp thêm câu chuyện. \nTác phẩm tiếp tục khám phá tình yêu và sự hy sinh. \nSách là một phần không thể thiếu của series nổi tiếng.', 'img/trang_non/bia.jpg', 1),
-(33, 'Nhật thực', 3, 3, 4, 90000.00, 60, 'Tác phẩm thứ ba trong series Chạng vạng, đầy kịch tính. \nBella phải lựa chọn giữa Edward và Jacob trong bối cảnh nguy hiểm. \nMột đội quân ma cà rồng mới sinh gây ra mối đe dọa lớn. \nTác phẩm mang đến những tình tiết gay cấn và cảm xúc mạnh mẽ. \nSách tiếp tục chinh phục người hâm mộ của series.', 'img/nhat_thuc/bia.jpg', 1),
-(34, 'Hừng đông', 3, 3, 4, 90000.00, 50, 'Tác phẩm cuối cùng trong series Chạng vạng, đầy bất ngờ. \nBella và Edward đối mặt với những thử thách sau khi kết hôn. \nSự ra đời của Renesmee kéo theo cuộc chiến với gia tộc Volturi. \nTác phẩm mang đến cái kết trọn vẹn cho câu chuyện tình yêu. \nSách đã được chuyển thể thành phim, khép lại series đình đám.', 'img/hung_dong/bia.jpg', 1),
-(35, 'Đồi gió hú', 3, 3, 1, 85000.00, 90, 'Tiểu thuyết kinh điển của Emily Brontë, đầy ám ảnh. \nTình yêu mãnh liệt giữa Heathcliff và Catherine Earnshaw gây ra bi kịch. \nBối cảnh vùng đồng hoang Yorkshire được tái hiện sống động. \nTác phẩm khám phá sự đam mê, thù hận và trả thù. \nSách là một trong những kiệt tác của văn học Anh.', 'img/doi_gio_hu/bia.jpg', 1),
-(36, 'Jane Eyre', 3, 3, 1, 80000.00, 80, 'Tiểu thuyết nổi tiếng của Charlotte Brontë, kể về hành trình trưởng thành. \nJane Eyre, một cô gái mồ côi, đối mặt với nhiều khó khăn trong cuộc sống. \nTình yêu với ông Rochester đầy thử thách và cảm xúc mãnh liệt. \nTác phẩm đề cao sự tự lập và lòng kiên cường của phụ nữ. \nSách là một trong những tác phẩm kinh điển của văn học Anh.', 'img/jane_eyre/bia.jpg', 1),
-(37, 'Bắt trẻ đồng xanh', 3, 3, 1, 70000.00, 100, 'Tác phẩm nổi tiếng của J.D. Salinger, nói về tuổi trẻ nổi loạn. \nNhân vật Holden Caulfield lang thang ở New York sau khi bị đuổi học. \nTác phẩm khắc họa tâm lý phức tạp của một thiếu niên bất mãn. \nLối viết chân thực, giọng văn độc đáo, chạm đến trái tim người đọc. \nSách đã trở thành biểu tượng của văn học Mỹ thế kỷ 20.', 'img/bat_tre_dong_xanh/bia.jpg', 1),
-(38, 'Thép đã tôi thế đấy', 3, 3, 1, 75000.00, 90, 'Tiểu thuyết kinh điển của Nikolai Ostrovsky, truyền cảm hứng mạnh mẽ. \nNhân vật Pavel Korchagin vượt qua khó khăn để cống hiến cho lý tưởng. \nTác phẩm ca ngợi tinh thần thép của con người trong thời chiến. \nLối viết giàu cảm xúc, mang tính giáo dục sâu sắc. \nSách đã trở thành biểu tượng của văn học Xô Viết.', 'img/thep_da_toi_the_day/bia.jpg', 1),
-(39, 'Những kẻ si tinh', 3, 3, 1, 95000.00, 70, 'Tiểu thuyết nổi tiếng của Victor Hugo, khắc họa xã hội Pháp thế kỷ 19. \nNhân vật Jean Valjean từ tội phạm trở thành người hùng cứu giúp người khác. \nTác phẩm đề cao lòng nhân ái, sự hy sinh và công lý. \nLối viết sử thi, giàu cảm xúc, chạm đến trái tim người đọc. \nSách đã được chuyển thể thành phim và nhạc kịch nổi tiếng.', 'img/nhung_ke_si_tinh/bia.jpg', 1),
-(40, 'Thằng gù nhà thờ Đức Bà', 3, 3, 1, 85000.00, 80, 'Tiểu thuyết kinh điển của Victor Hugo, kể về tình yêu và bi kịch. \nQuasimodo, một người gù xấu xí, yêu say đắm nàng Esmeralda. \nBối cảnh Paris thế kỷ 15 được tái hiện sống động và đầy cảm xúc. \nTác phẩm đề cao vẻ đẹp tâm hồn vượt qua định kiến xã hội. \nSách đã được chuyển thể thành phim và nhạc kịch nổi tiếng.', 'img/thang_gu_nha_tho_duc_ba/bia.jpg', 1),
-(41, 'Anna Karenina', 3, 3, 1, 130000.00, 50, 'Tiểu thuyết nổi tiếng của Leo Tolstoy, kể về tình yêu và bi kịch. \nAnna Karenina rơi vào mối tình cấm kỵ, dẫn đến những hậu quả đau lòng. \nTác phẩm khắc họa sâu sắc xã hội Nga thế kỷ 19 và tâm lý con người. \nLối viết tinh tế, giàu cảm xúc, khiến người đọc không thể rời mắt. \nSách là một trong những kiệt tác của văn học thế giới.', 'img/anna/bia.jpg', 1),
-(42, 'Lolita', 3, 3, 1, 90000.00, 60, 'Tiểu thuyết gây tranh cãi của Vladimir Nabokov, kể về một tình yêu ám ảnh. \nNhân vật Humbert Humbert bị cuốn vào mối quan hệ với cô bé Lolita. \nTác phẩm khám phá tâm lý phức tạp và những ranh giới đạo đức. \nLối viết tinh tế, giàu hình ảnh, nhưng đầy tranh cãi. \nSách đã được chuyển thể thành phim và gây nhiều tranh luận.', 'img/lolita/bia.jpg', 1),
-(43, '1984', 3, 3, 2, 80000.00, 100, 'Tiểu thuyết dystopian nổi tiếng của George Orwell, đầy ám ảnh. \nTác phẩm mô tả một xã hội toàn trị, nơi tự do bị bóp nghẹt hoàn toàn. \nNhân vật Winston Smith đấu tranh để giữ gìn nhân tính của mình. \nLối viết sắc sảo, mang tính cảnh báo về quyền lực và kiểm soát. \nSách là một trong những tác phẩm quan trọng của văn học thế kỷ 20.', 'img/1984/bia.jpg', 1),
-(44, 'Trại súc vật', 3, 3, 2, 70000.00, 110, 'Tác phẩm châm biếm nổi tiếng của George Orwell, đầy ý nghĩa. \nNhững con vật trong trang trại nổi dậy nhưng rơi vào chế độ độc tài mới. \nTác phẩm là một ẩn dụ sâu sắc về cách mạng và sự tha hóa quyền lực. \nLối viết đơn giản nhưng sắc sảo, khiến người đọc suy ngẫm. \nSách đã trở thành một biểu tượng của văn học chính trị.', 'img/trai_suc_vat/bia.jpg', 1),
-(45, 'Fahrenheit 451', 3, 3, 2, 85000.00, 90, 'Tiểu thuyết dystopian của Ray Bradbury, nói về một thế giới không sách. \nNhân vật Guy Montag là lính cứu hỏa chuyên đốt sách nhưng dần thức tỉnh. \nTác phẩm cảnh báo về sự kiểm soát tri thức và mất đi tự do tư duy. \nLối viết giàu hình ảnh, đầy cảm xúc, khiến người đọc suy ngẫm. \nSách là một trong những tác phẩm kinh điển của văn học khoa học viễn tưởng.', 'img/451/bia.jpg', 1),
-(46, 'Chúa tể những chiếc nhẫn', 3, 3, 2, 140000.00, 60, 'Tác phẩm kinh điển của J.R.R. Tolkien, mở ra thế giới giả tưởng hùng vĩ. \nFrodo và các bạn đồng hành đối mặt với hiểm nguy để tiêu diệt chiếc nhẫn. \nTác phẩm khắc họa sâu sắc tình bạn, lòng dũng cảm và sự hy sinh. \nLối viết chi tiết, giàu hình ảnh, tạo nên một thế giới sống động. \nSách đã được chuyển thể thành phim bom tấn, đoạt nhiều giải Oscar.', 'img/chua_te_cua_nhung_chiec_nha/bia.jpg', 1),
-(47, 'Hobbit', 3, 3, 2, 110000.00, 80, 'Tiền truyện của Chúa tể những chiếc nhẫn, do J.R.R. Tolkien sáng tác. \nBilbo Baggins tham gia hành trình phiêu lưu đầy bất ngờ với nhóm người lùn. \nTác phẩm mang đến những câu chuyện vui nhộn nhưng cũng đầy ý nghĩa. \nLối viết nhẹ nhàng, phù hợp với cả trẻ em và người lớn. \nSách đã được chuyển thể thành phim, được khán giả yêu thích.', 'img/hobbit/bia.jpg', 1),
-(48, 'Người đua diều', 3, 3, 1, 95000.00, 70, 'Tiểu thuyết nổi tiếng của Khaled Hosseini, đầy cảm xúc. \nCâu chuyện kể về tình bạn và sự chuộc lỗi của Amir và Hassan. \nBối cảnh Afghanistan đầy biến động được tái hiện chân thực. \nTác phẩm khám phá tình thân, lòng trung thành và sự tha thứ. \nSách đã chinh phục hàng triệu độc giả trên toàn thế giới.', 'img/nguoi_dua_dieu/bia.jpg', 1),
-(49, 'Ngàn mặt trời rực rỡ', 3, 3, 1, 100000.00, 60, 'Tác phẩm thứ hai của Khaled Hosseini, kể về số phận phụ nữ Afghanistan. \nMariam và Laila đối mặt với những bất công và đau khổ trong chiến tranh. \nTác phẩm đề cao sức mạnh của tình yêu và sự hy sinh của phụ nữ. \nLối viết cảm động, sâu sắc, khiến người đọc rơi nước mắt. \nSách là một trong những tác phẩm nổi bật của Hosseini.', 'img/ngan_mat_troi_ruc_ro/bia.jpg', 1),
-(50, 'Và rồi núi vọng', 3, 3, 1, 105000.00, 50, 'Tác phẩm thứ ba của Khaled Hosseini, kể về tình thân và chia ly. \nHai anh em Abdullah và Pari bị chia cắt, dẫn đến những câu chuyện cảm động. \nBối cảnh Afghanistan qua nhiều thập kỷ được tái hiện đầy chân thực. \nTác phẩm khám phá sự mất mát và tình yêu gia đình. \nSách tiếp tục khẳng định tài năng của Hosseini trong văn học.', 'img/va_roi_nui_vong/bia.jpg', 1),
-(51, 'Điều kỳ diệu', 3, 3, 1, 90000.00, 80, 'Tiểu thuyết nổi tiếng của R.J. Palacio, truyền cảm hứng mạnh mẽ. \nAuggie Pullman, một cậu bé bị dị tật bẩm sinh, đối mặt với định kiến. \nTác phẩm đề cao lòng tử tế và sự chấp nhận trong xã hội. \nLối viết nhẹ nhàng, cảm động, phù hợp với mọi lứa tuổi. \nSách đã được chuyển thể thành phim, được khán giả yêu thích.', 'img/dieu_ky_dieu/bia.jpg', 0);
+INSERT INTO `sach` (`idsach`, `tensach`, `idtacgia`, `idnhaxuatban`, `idtheloai`, `idctdanhmuc`, `gia`, `sltonkho`, `mota`, `anhbia`, `trangthai`) VALUES
+(1, 'Cho tôi xin một vé đi tuổi thơ', 1, 1, 1, 1, 13103974.00, 104, 'Tác phẩm kinh điển của Nguyễn Nhật Ánh, tái hiện tuổi thơ sống động. \nNhững trò chơi, ký ức và tình bạn trong trẻo được khắc họa tinh tế. \nCâu chuyện mang đậm hơi thở miền quê Nam Bộ, đầy hoài niệm. \nSách đã chinh phục hàng triệu độc giả qua nhiều thế hệ. \nMột hành trình trở về tuổi thơ mà bất kỳ ai cũng nên đọc.', 'img/cho_toi_xin_mot_ve/bia.jpg', 1),
+(2, 'Rừng Na Uy', 2, 2, 1, 1, 120000.00, 50, 'Tiểu thuyết nổi tiếng của Haruki Murakami, kể về tình yêu và cô đơn. \nNhân vật chính Toru Watanabe đối mặt với mất mát và ký ức tuổi trẻ. \nBối cảnh Nhật Bản thập niên 60 được tái hiện đầy cảm xúc. \nLối viết mơ màng, sâu lắng, đậm chất Murakami. \nTác phẩm đã được dịch ra nhiều thứ tiếng và yêu thích toàn cầu.', 'img/rung_na_uy/bia.jpg', 1),
+(3, 'Án mạng trên chuyến tàu tốc hành', 3, 3, 3, 3, 95000.00, 75, 'Tác phẩm trinh thám kinh điển của Agatha Christie, không thể bỏ qua. \nThám tử Hercule Poirot giải mã vụ án trên chuyến tàu sang trọng. \nMỗi hành khách đều là nghi phạm, tạo nên những tình tiết gay cấn. \nCốt truyện được xây dựng chặt chẽ với cái kết bất ngờ. \nSách đã được chuyển thể thành phim và kịch nổi tiếng.', 'img/an_mang_tren_tau/bia.jpg', 1),
+(4, 'Chí Phèo', 4, 4, 1, 1, 55000.00, 120, 'Kiệt tác văn học hiện thực của Nam Cao, khắc họa số phận bi thảm. \nChí Phèo, một người nông dân bị tha hóa bởi xã hội phong kiến. \nTình yêu với Thị Nở là tia sáng hiếm hoi nhưng cũng đầy bi kịch. \nTác phẩm phê phán sâu sắc sự bất công và tàn nhẫn của xã hội cũ. \nĐây là một trong những tác phẩm quan trọng của văn học Việt Nam.', 'img/chi_pheo/bia.jpg', 1),
+(5, 'The Shining', 5, 5, 5, 5, 135000.00, 60, 'Tiểu thuyết kinh dị nổi tiếng của Stephen King, đầy ám ảnh. \nGia đình Torrance bị mắc kẹt trong khách sạn Overlook ma quái. \nNhững hiện tượng siêu nhiên và tâm lý bất ổn đẩy họ vào nguy hiểm. \nLối kể chuyện lôi cuốn, tạo cảm giác rùng rợn đến từng trang. \nSách đã được chuyển thể thành phim kinh điển của Stanley Kubrick.', 'img/the_shinning/bia.jpg', 1),
+(6, 'Số đỏ', 6, 6, 1, 1, 85000.00, 90, 'Tác phẩm châm biếm đỉnh cao của Vũ Trọng Phụng, đầy hài hước. \nNhân vật Xuân Tóc Đỏ từ kẻ vô danh trở thành \"người hùng\" xã hội. \nTác phẩm phơi bày sự giả dối và lố lăng của tầng lớp thượng lưu. \nLối viết sắc sảo, giọng văn trào phúng khiến người đọc không thể rời mắt. \nĐây là một trong những tác phẩm tiêu biểu của văn học Việt Nam.', 'img/so_do/bia.jpg', 1),
+(7, 'Cosmos', 7, 7, 7, 7, 150000.00, 40, 'Cuốn sách khoa học kinh điển của Carl Sagan, mở ra cánh cửa vũ trụ. \nTác phẩm giải thích các khái niệm phức tạp một cách dễ hiểu. \nTừ lịch sử thiên văn đến tương lai của loài người, sách đều đề cập. \nLối viết truyền cảm hứng, khiến người đọc say mê khám phá khoa học. \nSách đi kèm với series truyền hình nổi tiếng cùng tên.', 'img/comos/bia.jpg', 1),
+(8, 'Dế mèn phiêu lưu ký', 8, 8, 9, 9, 65000.00, 198, 'Tác phẩm thiếu nhi nổi tiếng của Tô Hoài, gắn bó với nhiều thế hệ. \nChú dế mèn trải qua hành trình phiêu lưu đầy thú vị và ý nghĩa. \nNhững bài học về tình bạn, lòng dũng cảm được lồng ghép khéo léo. \nLối kể chuyện sinh động, đậm chất dân gian, thu hút trẻ em. \nSách là một phần ký ức tuổi thơ của hàng triệu độc giả Việt Nam.', 'img/de_men_phieu_luu_ky/bia.jpg', 1),
+(9, 'Đắc nhân tâm', 9, 9, 10, 10, 110000.00, 147, 'Cuốn sách kỹ năng sống kinh điển của Dale Carnegie, thay đổi cuộc đời. \nTác phẩm hướng dẫn cách xây dựng mối quan hệ và thu phục lòng người. \nNhững lời khuyên thực tế giúp người đọc cải thiện kỹ năng giao tiếp. \nSách đã được dịch ra hàng chục ngôn ngữ, bán hàng triệu bản. \nĐây là cuốn sách gối đầu giường cho bất kỳ ai muốn thành công.', 'img/dac_nhan_tam/bia.jpg', 1),
+(10, 'Góc sân và khoảng trời', 10, 10, 9, 9, 45000.00, 176, 'Tập thơ nổi tiếng của Trần Đăng Khoa, viết khi ông mới 8 tuổi. \nNhững vần thơ trong sáng, mộc mạc, tái hiện tuổi thơ làng quê. \nTác phẩm phản ánh thế giới hồn nhiên qua đôi mắt trẻ thơ. \nSự tài năng của \"thần đồng thơ ca\" khiến độc giả kinh ngạc. \nĐây là một trong những tập thơ thiếu nhi xuất sắc của Việt Nam.', 'img/goc_san_va_khoang_troi/bia.jpg', 1),
+(11, 'Lược sử thời gian', 11, 1, 7, 7, 160000.00, 30, 'Cuốn sách khoa học nổi tiếng của Stephen Hawking, giải thích về vũ trụ. \nTác phẩm đưa người đọc khám phá thời gian, không gian và lỗ đen. \nLối viết dễ hiểu, dù đề cập đến những khái niệm vật lý phức tạp. \nSách đã truyền cảm hứng cho hàng triệu người yêu khoa học. \nĐây là một trong những tác phẩm bán chạy nhất mọi thời đại.', 'img/luoc_su_thoi_gian/bia.jpg', 1),
+(12, 'Nhà giả kim', 2, 2, 1, 1, 90000.00, 80, 'Tiểu thuyết nổi tiếng của Paulo Coelho, kể về hành trình tìm ước mơ. \nNhân vật Santiago đi tìm \"kho báu\" và khám phá ý nghĩa cuộc sống. \nTác phẩm truyền tải thông điệp sâu sắc về việc lắng nghe trái tim. \nLối viết giàu hình ảnh, mang tính triết lý và cảm hứng. \nSách đã bán hàng triệu bản và được yêu thích trên toàn thế giới.', 'img/nha_gia_kim/bia.jpg', 1),
+(13, 'Đi tìm lẽ sống', 9, 9, 6, 6, 80000.00, 70, 'Cuốn sách truyền cảm hứng của Viktor Frankl, nói về ý nghĩa cuộc đời. \nTác giả kể lại trải nghiệm sống sót trong trại tập trung Đức Quốc xã. \nSách nhấn mạnh tầm quan trọng của việc tìm kiếm mục đích sống. \nLối viết chân thực, sâu sắc, chạm đến trái tim người đọc. \nĐây là một tác phẩm giúp người đọc vượt qua khó khăn trong cuộc sống.', 'img/di_tim_le_song/bia.jpg', 1),
+(14, 'Bố già', 3, 3, 1, 1, 110000.00, 90, 'Tiểu thuyết kinh điển của Mario Puzo, kể về thế giới mafia Ý. \nNhân vật Don Vito Corleone là biểu tượng của quyền lực và lòng trung thành. \nTác phẩm khắc họa sâu sắc tình thân và sự tàn nhẫn của thế giới ngầm. \nLối kể chuyện hấp dẫn, đầy kịch tính và bất ngờ. \nSách đã được chuyển thể thành bộ phim nổi tiếng đoạt giải Oscar.', 'img/bo_gia/bia.jpg', 1),
+(15, 'Cô gái đến từ hôm qua', 1, 1, 1, 1, 70000.00, 100, 'Tác phẩm nổi tiếng của Nguyễn Nhật Ánh, đong đầy cảm xúc tuổi trẻ. \nCâu chuyện kể về mối tình đầu trong sáng giữa hai thế hệ. \nBối cảnh Sài Gòn xưa được tái hiện sống động qua từng trang sách. \nLối viết nhẹ nhàng, sâu lắng, khiến người đọc không thể rời mắt. \nSách đã được chuyển thể thành phim, được khán giả yêu thích.', 'img/co_gai_den_tu_hom_qua/bia.jpg', 1),
+(16, 'Mắt biếc', 1, 1, 1, 1, 85000.00, 110, 'Tác phẩm đầy cảm xúc của Nguyễn Nhật Ánh, kể về tình yêu đơn phương. \nNhân vật Ngạn yêu Hà Lan qua đôi mắt biếc đầy mê hoặc. \nCâu chuyện mang đến những rung động đầu đời và nỗi buồn sâu lắng. \nLối viết trong trẻo, giàu hình ảnh, chạm đến trái tim người đọc. \nSách đã được chuyển thể thành phim, gây sốt tại Việt Nam.', 'img/mat_biec/bia.jpg', 1),
+(17, 'Kafka bên bờ biển', 2, 2, 1, 1, 130000.00, 60, 'Tiểu thuyết kỳ ảo của Haruki Murakami, đầy bí ẩn và sâu sắc. \nHai câu chuyện song song về một thiếu niên bỏ nhà đi và một ông lão lạ. \nTác phẩm đan xen giữa hiện thực và huyền bí, khiến người đọc tò mò. \nLối viết đặc trưng của Murakami, mơ màng và đầy triết lý. \nSách là một trong những kiệt tác của văn học Nhật Bản hiện đại.', 'img/kafka_ben_bo_bien/bia.jpg', 1),
+(18, '1Q84', 2, 2, 1, 1, 140000.00, 50, 'Tiểu thuyết đồ sộ của Haruki Murakami, gồm ba phần hấp dẫn. \nCâu chuyện diễn ra trong một thế giới song song đầy bí ẩn. \nNhân vật chính Aomame và Tengo đối mặt với những sự kiện kỳ lạ. \nLối viết phức tạp, đan xen giữa hiện thực và giả tưởng. \nSách là một trong những tác phẩm quan trọng của Murakami.', 'img/1q84/bia.jpg', 1),
+(19, 'Những người khốn khổ', 3, 3, 1, 1, 120000.00, 70, 'Kiệt tác văn học của Victor Hugo, kể về số phận những con người bất hạnh. \nNhân vật Jean Valjean từ một tù nhân trở thành người hùng cứu giúp người khác. \nTác phẩm khắc họa sâu sắc xã hội Pháp thế kỷ 19 đầy bất công. \nLối viết giàu cảm xúc, mang tính sử thi và nhân văn. \nSách đã được chuyển thể thành phim và nhạc kịch nổi tiếng.', 'img/nhung_nguoi_khon_kho/bia.jpg', 1),
+(20, 'Chiến tranh và hòa bình', 3, 3, 1, 1, 150000.00, 40, 'Tiểu thuyết sử thi của Leo Tolstoy, tái hiện nước Nga thời Napoleon. \nTác phẩm khắc họa số phận của nhiều nhân vật qua chiến tranh và hòa bình. \nCâu chuyện đan xen giữa lịch sử, tình yêu và những câu hỏi triết học. \nLối viết đồ sộ, chi tiết, nhưng đầy cảm xúc và cuốn hút. \nĐây là một trong những kiệt tác vĩ đại nhất của văn học thế giới.', 'img/chien_tranh_va_hoa_binh/bia.jpg', 1),
+(21, 'Tiếng chim hót trong bụi mận gai', 3, 3, 1, 1, 95000.00, 80, 'Tiểu thuyết tình cảm nổi tiếng của Colleen McCullough, đầy cảm xúc. \nCâu chuyện kể về tình yêu cấm kỵ giữa Meggie và cha Ralph de Bricassart. \nBối cảnh nước Úc rộng lớn được tái hiện sống động và thơ mộng. \nTác phẩm mang đến những rung động sâu sắc và nỗi buồn day dứt. \nSách đã được chuyển thể thành phim truyền hình nổi tiếng.', 'img/tieng_chim_hot_trong_bui_man_gai/bia.jpg', 1),
+(22, 'Ông già và biển cả', 3, 3, 1, 1, 60000.00, 100, 'Tác phẩm kinh điển của Ernest Hemingway, kể về ý chí con người. \nÔng lão Santiago chiến đấu với con cá lớn trong cuộc chiến sinh tồn. \nTác phẩm đề cao tinh thần kiên cường và lòng dũng cảm. \nLối viết ngắn gọn, mạnh mẽ, đậm chất Hemingway. \nSách đã giúp Hemingway nhận giải Nobel Văn học.', 'img/ong_gia_va_bien_ca/bia.jpg', 1),
+(23, 'Cuốn theo chiều gió', 3, 3, 1, 1, 125000.00, 60, 'Tiểu thuyết tình cảm nổi tiếng của Margaret Mitchell, đầy kịch tính. \nNhân vật Scarlett O’Hara đối mặt với tình yêu và chiến tranh. \nBối cảnh nước Mỹ thời nội chiến được tái hiện chân thực. \nTác phẩm khắc họa mạnh mẽ cá tính và sự kiên cường của phụ nữ. \nSách đã được chuyển thể thành phim kinh điển, đoạt nhiều giải Oscar.', 'img/cuon_theo_chieu_gio/bia.jpg', 1),
+(24, 'Harry Potter và Hòn đá phù thủy', 3, 3, 2, 2, 110000.00, 148, 'Tác phẩm đầu tiên trong series Harry Potter của J.K. Rowling. \nCậu bé Harry Potter khám phá thế giới phép thuật tại trường Hogwarts. \nCuốn sách mở ra hành trình phiêu lưu đầy ma thuật và tình bạn. \nLối viết hấp dẫn, phù hợp với cả trẻ em và người lớn. \nSách đã trở thành hiện tượng văn học toàn cầu.', 'img/harrypotter_va_hon_da_phu_thuy/bia.jpg', 1),
+(25, 'Harry Potter và Phòng chứa bí mật', 3, 3, 2, 2, 110000.00, 140, 'Tác phẩm thứ hai trong series Harry Potter, đầy bí ẩn. \nHarry đối mặt với những bí mật đen tối tại trường Hogwarts. \nCâu chuyện về con rắn Basilisk và Phòng chứa bí mật gây hồi hộp. \nTình bạn giữa Harry, Ron và Hermione tiếp tục được khắc họa sâu sắc. \nSách tiếp tục chinh phục độc giả trên toàn thế giới.', 'img/harrypoter_va_phong_chua_bi_mat/bia.jpg', 1),
+(26, 'Harry Potter và tên tù nhân ngục Azkaban', 3, 3, 2, 2, 110000.00, 130, 'Tác phẩm thứ ba trong series Harry Potter, đầy cảm xúc. \nHarry đối mặt với Sirius Black, một kẻ đào tẩu từ ngục Azkaban. \nNhững bí mật về gia đình Harry dần được hé lộ qua câu chuyện. \nTác phẩm mang đến nhiều tình tiết bất ngờ và cảm động. \nSách đã được chuyển thể thành phim, được khán giả yêu thích.', 'img/harrypotter_va_dia_nguc_buoi/bia.jpg', 1),
+(27, 'Harry Potter và chiếc cốc lửa', 3, 3, 2, 2, 110000.00, 120, 'Tác phẩm thứ tư trong series Harry Potter, đầy kịch tính. \nHarry tham gia giải đấu Tam Pháp Thuật nguy hiểm tại Hogwarts. \nSự trở lại của Chúa tể Voldemort đánh dấu bước ngoặt đen tối. \nCâu chuyện gay cấn với những thử thách phép thuật đầy hấp dẫn. \nSách đã giành được nhiều giải thưởng văn học danh giá.', 'img/harrypotter_va_cbiec_coc_lua/bia.jpg', 1),
+(28, 'Harry Potter và Hội Phượng Hoàng', 3, 3, 2, 2, 110000.00, 110, 'Tác phẩm thứ năm trong series Harry Potter, đầy cảm xúc. \nHarry thành lập Hội Phượng Hoàng để chống lại Voldemort. \nNhững mất mát lớn khiến câu chuyện trở nên sâu sắc hơn. \nTác phẩm khắc họa sự trưởng thành của Harry và bạn bè. \nSách tiếp tục là một phần không thể thiếu của series huyền thoại.', 'img/hrpt_va_hoi_phuong_hoang/bia.jpg', 1),
+(29, 'Harry Potter và Hoàng tử lai', 3, 3, 2, 2, 110000.00, 100, 'Tác phẩm thứ sáu trong series Harry Potter, đầy bất ngờ. \nHarry khám phá bí mật về quá khứ của Voldemort qua ký ức. \nNhân vật \"Hoàng tử lai\" đóng vai trò quan trọng trong cốt truyện. \nTác phẩm mang đến nhiều tình tiết căng thẳng và cảm động. \nSách chuẩn bị cho cái kết hoành tráng của series.', 'img/hrpt_va_hoang_tu_lai/bia.jpg', 1),
+(30, 'Harry Potter và Bảo bối Tử thần', 3, 3, 2, 2, 110000.00, 90, 'Tác phẩm cuối cùng trong series Harry Potter, đầy kịch tính. \nHarry, Ron và Hermione săn lùng Trường Sinh Linh Giá của Voldemort. \nCuộc chiến cuối cùng tại Hogwarts quyết định số phận thế giới phép thuật. \nTác phẩm mang đến cái kết hoàn hảo cho một hành trình dài. \nSách đã trở thành biểu tượng văn học của thế kỷ 21.', 'img/hrpt_va_bao_boi_tu_than/bia.jpg', 1),
+(31, 'Chạng vạng', 3, 3, 4, 4, 90000.00, 80, 'Tác phẩm đầu tiên trong series Chạng vạng của Stephenie Meyer. \nBella Swan yêu Edward Cullen, một chàng trai ma cà rồng bí ẩn. \nTình yêu giữa con người và ma cà rồng đầy nguy hiểm và cám dỗ. \nLối viết lãng mạn, cuốn hút, đặc biệt dành cho tuổi teen. \nSách đã được chuyển thể thành phim, gây sốt trên toàn thế giới.', 'img/chang_vang/bia.jpg', 1),
+(32, 'Trăng non', 3, 3, 4, 4, 90000.00, 70, 'Tác phẩm thứ hai trong series Chạng vạng, đầy cảm xúc. \nBella rơi vào tuyệt vọng khi Edward rời bỏ cô để bảo vệ cô. \nMối quan hệ với Jacob Black, một người sói, làm phức tạp thêm câu chuyện. \nTác phẩm tiếp tục khám phá tình yêu và sự hy sinh. \nSách là một phần không thể thiếu của series nổi tiếng.', 'img/trang_non/bia.jpg', 1),
+(33, 'Nhật thực', 3, 3, 4, 4, 90000.00, 60, 'Tác phẩm thứ ba trong series Chạng vạng, đầy kịch tính. \nBella phải lựa chọn giữa Edward và Jacob trong bối cảnh nguy hiểm. \nMột đội quân ma cà rồng mới sinh gây ra mối đe dọa lớn. \nTác phẩm mang đến những tình tiết gay cấn và cảm xúc mạnh mẽ. \nSách tiếp tục chinh phục người hâm mộ của series.', 'img/nhat_thuc/bia.jpg', 1),
+(34, 'Hừng đông', 3, 3, 4, 4, 90000.00, 50, 'Tác phẩm cuối cùng trong series Chạng vạng, đầy bất ngờ. \nBella và Edward đối mặt với những thử thách sau khi kết hôn. \nSự ra đời của Renesmee kéo theo cuộc chiến với gia tộc Volturi. \nTác phẩm mang đến cái kết trọn vẹn cho câu chuyện tình yêu. \nSách đã được chuyển thể thành phim, khép lại series đình đám.', 'img/hung_dong/bia.jpg', 1),
+(35, 'Đồi gió hú', 3, 3, 1, 1, 85000.00, 90, 'Tiểu thuyết kinh điển của Emily Brontë, đầy ám ảnh. \nTình yêu mãnh liệt giữa Heathcliff và Catherine Earnshaw gây ra bi kịch. \nBối cảnh vùng đồng hoang Yorkshire được tái hiện sống động. \nTác phẩm khám phá sự đam mê, thù hận và trả thù. \nSách là một trong những kiệt tác của văn học Anh.', 'img/doi_gio_hu/bia.jpg', 1),
+(36, 'Jane Eyre', 3, 3, 1, 1, 80000.00, 80, 'Tiểu thuyết nổi tiếng của Charlotte Brontë, kể về hành trình trưởng thành. \nJane Eyre, một cô gái mồ côi, đối mặt với nhiều khó khăn trong cuộc sống. \nTình yêu với ông Rochester đầy thử thách và cảm xúc mãnh liệt. \nTác phẩm đề cao sự tự lập và lòng kiên cường của phụ nữ. \nSách là một trong những tác phẩm kinh điển của văn học Anh.', 'img/jane_eyre/bia.jpg', 1),
+(37, 'Bắt trẻ đồng xanh', 3, 3, 1, 1, 70000.00, 100, 'Tác phẩm nổi tiếng của J.D. Salinger, nói về tuổi trẻ nổi loạn. \nNhân vật Holden Caulfield lang thang ở New York sau khi bị đuổi học. \nTác phẩm khắc họa tâm lý phức tạp của một thiếu niên bất mãn. \nLối viết chân thực, giọng văn độc đáo, chạm đến trái tim người đọc. \nSách đã trở thành biểu tượng của văn học Mỹ thế kỷ 20.', 'img/bat_tre_dong_xanh/bia.jpg', 1),
+(38, 'Thép đã tôi thế đấy', 3, 3, 1, 1, 75000.00, 90, 'Tiểu thuyết kinh điển của Nikolai Ostrovsky, truyền cảm hứng mạnh mẽ. \nNhân vật Pavel Korchagin vượt qua khó khăn để cống hiến cho lý tưởng. \nTác phẩm ca ngợi tinh thần thép của con người trong thời chiến. \nLối viết giàu cảm xúc, mang tính giáo dục sâu sắc. \nSách đã trở thành biểu tượng của văn học Xô Viết.', 'img/thep_da_toi_the_day/bia.jpg', 1),
+(39, 'Những kẻ si tinh', 3, 3, 1, 1, 95000.00, 70, 'Tiểu thuyết nổi tiếng của Victor Hugo, khắc họa xã hội Pháp thế kỷ 19. \nNhân vật Jean Valjean từ tội phạm trở thành người hùng cứu giúp người khác. \nTác phẩm đề cao lòng nhân ái, sự hy sinh và công lý. \nLối viết sử thi, giàu cảm xúc, chạm đến trái tim người đọc. \nSách đã được chuyển thể thành phim và nhạc kịch nổi tiếng.', 'img/nhung_ke_si_tinh/bia.jpg', 1),
+(40, 'Thằng gù nhà thờ Đức Bà', 3, 3, 1, 1, 85000.00, 80, 'Tiểu thuyết kinh điển của Victor Hugo, kể về tình yêu và bi kịch. \nQuasimodo, một người gù xấu xí, yêu say đắm nàng Esmeralda. \nBối cảnh Paris thế kỷ 15 được tái hiện sống động và đầy cảm xúc. \nTác phẩm đề cao vẻ đẹp tâm hồn vượt qua định kiến xã hội. \nSách đã được chuyển thể thành phim và nhạc kịch nổi tiếng.', 'img/thang_gu_nha_tho_duc_ba/bia.jpg', 1),
+(41, 'Anna Karenina', 3, 3, 1, 1, 130000.00, 50, 'Tiểu thuyết nổi tiếng của Leo Tolstoy, kể về tình yêu và bi kịch. \nAnna Karenina rơi vào mối tình cấm kỵ, dẫn đến những hậu quả đau lòng. \nTác phẩm khắc họa sâu sắc xã hội Nga thế kỷ 19 và tâm lý con người. \nLối viết tinh tế, giàu cảm xúc, khiến người đọc không thể rời mắt. \nSách là một trong những kiệt tác của văn học thế giới.', 'img/anna/bia.jpg', 1),
+(42, 'Lolita', 3, 3, 1, 1, 90000.00, 60, 'Tiểu thuyết gây tranh cãi của Vladimir Nabokov, kể về một tình yêu ám ảnh. \nNhân vật Humbert Humbert bị cuốn vào mối quan hệ với cô bé Lolita. \nTác phẩm khám phá tâm lý phức tạp và những ranh giới đạo đức. \nLối viết tinh tế, giàu hình ảnh, nhưng đầy tranh cãi. \nSách đã được chuyển thể thành phim và gây nhiều tranh luận.', 'img/lolita/bia.jpg', 1),
+(43, '1984', 3, 3, 2, 2, 80000.00, 100, 'Tiểu thuyết dystopian nổi tiếng của George Orwell, đầy ám ảnh. \nTác phẩm mô tả một xã hội toàn trị, nơi tự do bị bóp nghẹt hoàn toàn. \nNhân vật Winston Smith đấu tranh để giữ gìn nhân tính của mình. \nLối viết sắc sảo, mang tính cảnh báo về quyền lực và kiểm soát. \nSách là một trong những tác phẩm quan trọng của văn học thế kỷ 20.', 'img/1984/bia.jpg', 1),
+(44, 'Trại súc vật', 3, 3, 2, 2, 70000.00, 110, 'Tác phẩm châm biếm nổi tiếng của George Orwell, đầy ý nghĩa. \nNhững con vật trong trang trại nổi dậy nhưng rơi vào chế độ độc tài mới. \nTác phẩm là một ẩn dụ sâu sắc về cách mạng và sự tha hóa quyền lực. \nLối viết đơn giản nhưng sắc sảo, khiến người đọc suy ngẫm. \nSách đã trở thành một biểu tượng của văn học chính trị.', 'img/trai_suc_vat/bia.jpg', 1),
+(45, 'Fahrenheit 451', 3, 3, 2, 2, 85000.00, 90, 'Tiểu thuyết dystopian của Ray Bradbury, nói về một thế giới không sách. \nNhân vật Guy Montag là lính cứu hỏa chuyên đốt sách nhưng dần thức tỉnh. \nTác phẩm cảnh báo về sự kiểm soát tri thức và mất đi tự do tư duy. \nLối viết giàu hình ảnh, đầy cảm xúc, khiến người đọc suy ngẫm. \nSách là một trong những tác phẩm kinh điển của văn học khoa học viễn tưởng.', 'img/451/bia.jpg', 1),
+(46, 'Chúa tể những chiếc nhẫn', 3, 3, 2, 2, 140000.00, 60, 'Tác phẩm kinh điển của J.R.R. Tolkien, mở ra thế giới giả tưởng hùng vĩ. \nFrodo và các bạn đồng hành đối mặt với hiểm nguy để tiêu diệt chiếc nhẫn. \nTác phẩm khắc họa sâu sắc tình bạn, lòng dũng cảm và sự hy sinh. \nLối viết chi tiết, giàu hình ảnh, tạo nên một thế giới sống động. \nSách đã được chuyển thể thành phim bom tấn, đoạt nhiều giải Oscar.', 'img/chua_te_cua_nhung_chiec_nha/bia.jpg', 1),
+(47, 'Hobbit', 3, 3, 2, 2, 110000.00, 80, 'Tiền truyện của Chúa tể những chiếc nhẫn, do J.R.R. Tolkien sáng tác. \nBilbo Baggins tham gia hành trình phiêu lưu đầy bất ngờ với nhóm người lùn. \nTác phẩm mang đến những câu chuyện vui nhộn nhưng cũng đầy ý nghĩa. \nLối viết nhẹ nhàng, phù hợp với cả trẻ em và người lớn. \nSách đã được chuyển thể thành phim, được khán giả yêu thích.', 'img/hobbit/bia.jpg', 1),
+(48, 'Người đua diều', 3, 3, 1, 1, 95000.00, 70, 'Tiểu thuyết nổi tiếng của Khaled Hosseini, đầy cảm xúc. \nCâu chuyện kể về tình bạn và sự chuộc lỗi của Amir và Hassan. \nBối cảnh Afghanistan đầy biến động được tái hiện chân thực. \nTác phẩm khám phá tình thân, lòng trung thành và sự tha thứ. \nSách đã chinh phục hàng triệu độc giả trên toàn thế giới.', 'img/nguoi_dua_dieu/bia.jpg', 1),
+(49, 'Ngàn mặt trời rực rỡ', 3, 3, 1, 1, 100000.00, 60, 'Tác phẩm thứ hai của Khaled Hosseini, kể về số phận phụ nữ Afghanistan. \nMariam và Laila đối mặt với những bất công và đau khổ trong chiến tranh. \nTác phẩm đề cao sức mạnh của tình yêu và sự hy sinh của phụ nữ. \nLối viết cảm động, sâu sắc, khiến người đọc rơi nước mắt. \nSách là một trong những tác phẩm nổi bật của Hosseini.', 'img/ngan_mat_troi_ruc_ro/bia.jpg', 1),
+(50, 'Và rồi núi vọng', 3, 3, 1, 1, 105000.00, 50, 'Tác phẩm thứ ba của Khaled Hosseini, kể về tình thân và chia ly. \nHai anh em Abdullah và Pari bị chia cắt, dẫn đến những câu chuyện cảm động. \nBối cảnh Afghanistan qua nhiều thập kỷ được tái hiện đầy chân thực. \nTác phẩm khám phá sự mất mát và tình yêu gia đình. \nSách tiếp tục khẳng định tài năng của Hosseini trong văn học.', 'img/va_roi_nui_vong/bia.jpg', 1),
+(51, 'Điều kỳ diệu', 3, 3, 1, 1, 90000.00, 80, 'Tiểu thuyết nổi tiếng của R.J. Palacio, truyền cảm hứng mạnh mẽ. \nAuggie Pullman, một cậu bé bị dị tật bẩm sinh, đối mặt với định kiến. \nTác phẩm đề cao lòng tử tế và sự chấp nhận trong xã hội. \nLối viết nhẹ nhàng, cảm động, phù hợp với mọi lứa tuổi. \nSách đã được chuyển thể thành phim, được khán giả yêu thích.', 'img/dieu_ky_dieu/bia.jpg', 1),
+(59, 'đ', 1, 3, NULL, 2, 0.00, 0, 'sdsd', 'img/ANH_SACH_MOI/bia.jpg', 0);
 
 -- --------------------------------------------------------
 
@@ -795,27 +790,21 @@ INSERT INTO `tacgia` (`idtacgia`, `tentacgia`, `tieusu`, `trangthai`) VALUES
 --
 
 CREATE TABLE `taikhoan_khachhang` (
+  `idtaikhoan` int(11) NOT NULL,
   `idkhachhang` int(11) NOT NULL,
-  `tendangnhap` varchar(50) NOT NULL,
-  `matkhau` varchar(50) NOT NULL,
+  `tendangnhap` varchar(255) NOT NULL,
+  `matkhau` varchar(255) NOT NULL,
   `trangthai` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `taikhoan_khachhang`
 --
 
-INSERT INTO `taikhoan_khachhang` (`idkhachhang`, `tendangnhap`, `matkhau`, `trangthai`) VALUES
-(1, 'nguyenvana', 'nguyenvana', 1),
-(2, 'tranthib', 'tranthib', 1),
-(3, 'levanc', 'levanc', 1),
-(4, 'phamthid', 'phamthid', 1),
-(5, 'hoangvane', 'hoangvane', 1),
-(6, 'vuthif', 'vuthif', 1),
-(7, 'dangvang', 'dangvang', 1),
-(8, 'buithih', 'buithih', 1),
-(9, 'maivani', 'maivani', 1),
-(10, 'lythik', 'lythik', 1);
+INSERT INTO `taikhoan_khachhang` (`idtaikhoan`, `idkhachhang`, `tendangnhap`, `matkhau`, `trangthai`) VALUES
+(1, 1, 'nguyenvana', '123456', 1),
+(2, 2, 'admin', 'admin', 1),
+(4, 11, 'taone', 'taone', 1);
 
 -- --------------------------------------------------------
 
@@ -838,10 +827,36 @@ CREATE TABLE `taikhoan_nhanvien` (
 INSERT INTO `taikhoan_nhanvien` (`idnhanvien`, `TaiKhoan`, `MatKhau`, `Quyen`, `TrangThai`) VALUES
 (1, 'admin', 'admin', 'Quản trị viên', 1),
 (2, 'nv01', 'nv01', 'Nhân viên nhập hàng', 1),
-(3, 'quanly', 'quanly', 'Quản lý', 1),
-(4, 'nv02', 'nv02', 'Nhân viên bán hàng', 1),
-(5, 'thuhuyen', 'thuhuyen', 'Nhân viên bán hàng', 1),
-(6, 'abcabc', '123456', 'Nhân viên bán hàng', 1);
+(3, 'quanly', 'quanly', 'Quản lý', 0),
+(4, 'nv02', 'nv02', 'Nhân viên bán hàng', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `theloai`
+--
+
+CREATE TABLE `theloai` (
+  `idtheloai` int(11) NOT NULL,
+  `tentheloai` varchar(255) NOT NULL,
+  `trangthai` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `theloai`
+--
+
+INSERT INTO `theloai` (`idtheloai`, `tentheloai`, `trangthai`) VALUES
+(1, 'Tiểu thuyết', 1),
+(2, 'Khoa học viễn tưởng', 1),
+(3, 'Trinh thám', 1),
+(4, 'Lãng mạn', 1),
+(5, 'Kinh dị', 1),
+(6, 'Tự truyện', 1),
+(7, 'Khoa học', 1),
+(8, 'Lịch sử', 1),
+(9, 'Thiếu nhi', 1),
+(10, 'Kỹ năng sống', 1);
 
 -- --------------------------------------------------------
 
@@ -867,7 +882,7 @@ CREATE TABLE `thongtincuahang` (
 --
 
 INSERT INTO `thongtincuahang` (`idthongtin`, `diachi`, `sodienthoai`, `email`, `facebook`, `tiktok`, `tenNH`, `stk`, `tenChuTK`, `anhQrCk`) VALUES
-(1, '273, An Dương Vương ,phường 2 , Quận 5, TP Hồ Chí Minh', '0909876543', 'unibook@gmail.com', 'https://www.facebook.com/', 'https://tiktok.com/', 'Vietcombank', '0123456789', 'UniBook', '/resources/images/QrCode.png');
+(1, '273, An Dương Vương ,phường 2 , Quận 5, TP Hồ Chí Minh', '0909876543', 'unibook@gmail.com', 'https://www.facebook.com/', 'https://tiktok.com/', 'Vietcombank', '0123456789', 'UniBook', 'img/qrcode/bia.jpg');
 
 -- --------------------------------------------------------
 
@@ -885,7 +900,7 @@ CREATE TABLE `thongtinnhanhang` (
   `hotenNgNhan` varchar(255) NOT NULL,
   `sdtNgNhan` varchar(20) NOT NULL,
   `emailNgNhan` varchar(50) DEFAULT NULL,
-  `trangthai` int(11) NOT NULL DEFAULT 0
+  `trangthai` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -893,8 +908,8 @@ CREATE TABLE `thongtinnhanhang` (
 --
 
 INSERT INTO `thongtinnhanhang` (`iddiachi`, `idkhachhang`, `thanhpho`, `huyen`, `xa`, `diachi_chitiet`, `hotenNgNhan`, `sdtNgNhan`, `emailNgNhan`, `trangthai`) VALUES
-(1, 8, 'tphcm', 'abc', 'abc', 'abc', 'abc', '0999888999', 'abc@gmail.com', 0),
-(2, 1, 'Hồ Chí Minh', 'Quận 1', 'Phường Bến Nghé', 'ssdsdá', 'ádf', '0123456789', '', 0);
+(1, 1, 'Hồ Chí Minh', 'Quận 1', 'Phường Bến Nghé', 'ádfsadf', 'ádf', '0123457891', '', 0),
+(3, 2, 'Hồ Chí Minh', 'Quận 1', 'Phường Bến Nghé', 'sdsdsd', 'Vũ', '0342362164', '', 1);
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -925,9 +940,9 @@ ALTER TABLE `chitiethoadon`
 -- Chỉ mục cho bảng `chitietphieunhap`
 --
 ALTER TABLE `chitietphieunhap`
-  ADD PRIMARY KEY (`idphieunhap`,`idsach`),
-  ADD KEY `fk_sach_ctpn` (`idsach`),
-  ADD KEY `fk_phieunhap_ctpn` (`idphieunhap`);
+  ADD PRIMARY KEY (`idchitietphieunhap`),
+  ADD KEY `fk_idphieunhap` (`idphieunhap`),
+  ADD KEY `fk_idsach1` (`idsach`);
 
 --
 -- Chỉ mục cho bảng `danhmuc`
@@ -1005,6 +1020,7 @@ ALTER TABLE `sach`
   ADD PRIMARY KEY (`idsach`),
   ADD KEY `fk_idnhaxuatban` (`idnhaxuatban`),
   ADD KEY `fk_idtacgia` (`idtacgia`),
+  ADD KEY `fk_idtheloai` (`idtheloai`),
   ADD KEY `fk_iddanhmuc1` (`idctdanhmuc`);
 
 --
@@ -1017,7 +1033,8 @@ ALTER TABLE `tacgia`
 -- Chỉ mục cho bảng `taikhoan_khachhang`
 --
 ALTER TABLE `taikhoan_khachhang`
-  ADD PRIMARY KEY (`idkhachhang`);
+  ADD PRIMARY KEY (`idtaikhoan`),
+  ADD KEY `fk_tk_khachhang` (`idkhachhang`);
 
 --
 -- Chỉ mục cho bảng `taikhoan_nhanvien`
@@ -1025,6 +1042,12 @@ ALTER TABLE `taikhoan_khachhang`
 ALTER TABLE `taikhoan_nhanvien`
   ADD PRIMARY KEY (`idnhanvien`),
   ADD KEY `fk_quyen` (`Quyen`);
+
+--
+-- Chỉ mục cho bảng `theloai`
+--
+ALTER TABLE `theloai`
+  ADD PRIMARY KEY (`idtheloai`);
 
 --
 -- Chỉ mục cho bảng `thongtincuahang`
@@ -1053,13 +1076,19 @@ ALTER TABLE `banner`
 -- AUTO_INCREMENT cho bảng `chitietdanhmuc`
 --
 ALTER TABLE `chitietdanhmuc`
-  MODIFY `idchitietdanhmuc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `idchitietdanhmuc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT cho bảng `chitiethoadon`
 --
 ALTER TABLE `chitiethoadon`
-  MODIFY `idchitiethoadon` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `idchitiethoadon` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT cho bảng `chitietphieunhap`
+--
+ALTER TABLE `chitietphieunhap`
+  MODIFY `idchitietphieunhap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `danhmuc`
@@ -1071,7 +1100,7 @@ ALTER TABLE `danhmuc`
 -- AUTO_INCREMENT cho bảng `giohang`
 --
 ALTER TABLE `giohang`
-  MODIFY `idgiohang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `idgiohang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT cho bảng `hinhanhsach`
@@ -1083,13 +1112,13 @@ ALTER TABLE `hinhanhsach`
 -- AUTO_INCREMENT cho bảng `hoadon`
 --
 ALTER TABLE `hoadon`
-  MODIFY `idhoadon` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idhoadon` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT cho bảng `khachhang`
 --
 ALTER TABLE `khachhang`
-  MODIFY `idkhachhang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idkhachhang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT cho bảng `nhacungcap`
@@ -1101,7 +1130,7 @@ ALTER TABLE `nhacungcap`
 -- AUTO_INCREMENT cho bảng `nhanvien`
 --
 ALTER TABLE `nhanvien`
-  MODIFY `idnhanvien` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `idnhanvien` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `nhaxuatban`
@@ -1113,13 +1142,13 @@ ALTER TABLE `nhaxuatban`
 -- AUTO_INCREMENT cho bảng `phieunhap`
 --
 ALTER TABLE `phieunhap`
-  MODIFY `idphieunhap` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idphieunhap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `sach`
 --
 ALTER TABLE `sach`
-  MODIFY `idsach` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `idsach` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT cho bảng `tacgia`
@@ -1131,13 +1160,19 @@ ALTER TABLE `tacgia`
 -- AUTO_INCREMENT cho bảng `taikhoan_khachhang`
 --
 ALTER TABLE `taikhoan_khachhang`
-  MODIFY `idkhachhang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idtaikhoan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `taikhoan_nhanvien`
 --
 ALTER TABLE `taikhoan_nhanvien`
-  MODIFY `idnhanvien` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idnhanvien` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `theloai`
+--
+ALTER TABLE `theloai`
+  MODIFY `idtheloai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT cho bảng `thongtincuahang`
@@ -1165,15 +1200,15 @@ ALTER TABLE `chitietdanhmuc`
 -- Các ràng buộc cho bảng `chitiethoadon`
 --
 ALTER TABLE `chitiethoadon`
-  ADD CONSTRAINT `fk_idhoadon` FOREIGN KEY (`idhoadon`) REFERENCES `hoadon` (`idhoadon`),
-  ADD CONSTRAINT `fk_idsach` FOREIGN KEY (`idsach`) REFERENCES `sach` (`idsach`);
+  ADD CONSTRAINT `fk_idhoadon` FOREIGN KEY (`idhoadon`) REFERENCES `hoadon` (`idhoadon`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_idsach` FOREIGN KEY (`idsach`) REFERENCES `sach` (`idsach`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `chitietphieunhap`
 --
 ALTER TABLE `chitietphieunhap`
-  ADD CONSTRAINT `fk_phieunhap_ctpn` FOREIGN KEY (`idphieunhap`) REFERENCES `phieunhap` (`idphieunhap`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_sach_ctpn` FOREIGN KEY (`idsach`) REFERENCES `sach` (`idsach`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_idphieunhap` FOREIGN KEY (`idphieunhap`) REFERENCES `phieunhap` (`idphieunhap`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_idsach1` FOREIGN KEY (`idsach`) REFERENCES `sach` (`idsach`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `giohang`
@@ -1215,13 +1250,14 @@ ALTER TABLE `phieunhap`
 ALTER TABLE `sach`
   ADD CONSTRAINT `fk_iddanhmuc1` FOREIGN KEY (`idctdanhmuc`) REFERENCES `chitietdanhmuc` (`idchitietdanhmuc`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_idnhaxuatban` FOREIGN KEY (`idnhaxuatban`) REFERENCES `nhaxuatban` (`idnhaxuatban`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_idtacgia` FOREIGN KEY (`idtacgia`) REFERENCES `tacgia` (`idtacgia`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_idtacgia` FOREIGN KEY (`idtacgia`) REFERENCES `tacgia` (`idtacgia`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_idtheloai` FOREIGN KEY (`idtheloai`) REFERENCES `theloai` (`idtheloai`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `taikhoan_khachhang`
 --
 ALTER TABLE `taikhoan_khachhang`
-  ADD CONSTRAINT `fk_taikhoan_khachhang` FOREIGN KEY (`idkhachhang`) REFERENCES `khachhang` (`idkhachhang`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_tk_khachhang` FOREIGN KEY (`idkhachhang`) REFERENCES `khachhang` (`idkhachhang`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `taikhoan_nhanvien`
